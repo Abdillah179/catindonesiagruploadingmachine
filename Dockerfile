@@ -33,3 +33,5 @@ RUN a2enmod rewrite
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 10000
+
+CMD php artisan storage:link && apache2-foreground
