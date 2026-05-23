@@ -29,10 +29,12 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Apache config
-RUN a2enmod rewrite
+RUN a2enmod rewrite \
+    && a2dismod mpm_event \
+    && a2enmod mpm_prefork
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 COPY .docker/ports.conf /etc/apache2/ports.conf
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "php artisan storage:link && apache2-foreground"]
+CMD ["sh", "-c", "php artisan storage:link --force && apache2-foreground"]
